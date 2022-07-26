@@ -4,7 +4,7 @@ import subprocess
 from distutils.command.build_ext import build_ext
 from distutils.core import Extension
 
-pcre_path = os.getenv("PCRE_PATH", "/opt/pcre/.libs")
+pcre_path = os.getenv("PCRE_PATH", "/opt/homebrew/lib")
 
 
 # http://code.activestate.com/recipes/502261-python-distutils-pkg-config/
@@ -22,10 +22,9 @@ def pkgconfig(libs, optional="", static=False):
             ["--libs-only-other"],
             0,
             [
-                # f"-Wl,-rpath={pcre_path}",
-                # "-l:libpcre.so",
-                "-l:libhs.a",
-                "-l:libchimera.a",
+                "-lpcre",
+                "-lhs",
+                "-lchimera",
             ],
         ),
     }
@@ -73,10 +72,6 @@ def build(setup_kwargs):
                 Extension(
                     "hyperscan._hyperscan",
                     ["src/hyperscan/hyperscanmodule.c"],
-                    extra_objects=[
-                        os.path.join(pcre_path, "libpcre.a"),
-                        *glob.glob(os.path.join(pcre_path, '*.o')),
-                    ],
                     **pkg_config_options,
                 )
             ],
