@@ -72,6 +72,10 @@ def build(setup_kwargs):
                 Extension(
                     "hyperscan._hyperscan",
                     ["src/hyperscan/hyperscanmodule.c"],
+                    extra_objects=[
+                        os.path.join(pcre_path, "libpcre.a"),
+                        *glob.glob(os.path.join(pcre_path, '*.o')),
+                    ],
                     **pkg_config_options,
                 )
             ],
